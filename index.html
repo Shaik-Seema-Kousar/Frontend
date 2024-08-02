@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP21110011325</title> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #response {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>JSON Processor</h1>
+
+    <div>
+        <label for="jsonInput">Enter JSON:</label>
+        <input type="text" id="jsonInput" placeholder='{"data": ["A", "B", "1", "2", "z"]}' style="width: 80%;">
+        <button id="submitBtn">Submit</button>
+        <p id="errorMsg" class="error"></p>
+    </div>
+
+    <div id="dropdownContainer" style="display:none; margin-top: 20px;">
+        <label for="optionsDropdown">Select Options:</label>
+        <select id="optionsDropdown" multiple>
+            <option value="Alphabets">Alphabets</option>
+            <option value="Numbers">Numbers</option>
+            <option value="Highest alphabet">Highest Alphabet</option>
+        </select>
+    </div>
+
+    <div id="response"></div>
+
+    <script>
+        const jsonInput = document.getElementById('jsonInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const dropdownContainer = document.getElementById('dropdownContainer');
+        const optionsDropdown = document.getElementById('optionsDropdown');
+        const responseDiv = document.getElementById('response');
+
+        submitBtn.addEventListener('click', () => {
+            errorMsg.textContent = '';
+            responseDiv.innerHTML = '';
+            dropdownContainer.style.display = 'none';
+            
+            let parsedJson;
+            try {
+                parsedJson = JSON.parse(jsonInput.value);
+                if (!parsedJson || !parsedJson.data) {
+                    throw new Error('Invalid JSON structure');
+                }
+            } catch (err) {
+                errorMsg.textContent = 'Invalid JSON format';
+                return;
+            }
+
+            dropdownContainer.style.display = 'block';
+
+            optionsDropdown.addEventListener('change', () => {
+                let selectedOptions = Array.from(optionsDropdown.selectedOptions, option => option.value);
+                let filteredData = parsedJson.data;
+
+                if (selectedOptions.includes('Alphabets')) {
+                    filteredData = filteredData.filter(item => /^[A-Za-z]+$/.test(item));
+                }
+                if (selectedOptions.includes('Numbers')) {
+                    filteredData = filteredData.filter(item => /^[0-9]+$/.test(item));
+                }
+                if (selectedOptions.includes('Highest alphabet')) {
+                    const highestAlphabet = filteredData.filter(item => /^[A-Za-z]+$/.test(item)).sort().reverse()[0];
+                    filteredData = [highestAlphabet];
+                }
+
+                responseDiv.innerHTML = `<h3>Response:</h3><p>${filteredData.join(', ')}</p>`;
+            });
+        });
+    </script>
+
+</body>
+</html>
