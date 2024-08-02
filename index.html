@@ -39,51 +39,6 @@
 
     <div id="response"></div>
 
-    <script>
-        const jsonInput = document.getElementById('jsonInput');
-        const submitBtn = document.getElementById('submitBtn');
-        const errorMsg = document.getElementById('errorMsg');
-        const dropdownContainer = document.getElementById('dropdownContainer');
-        const optionsDropdown = document.getElementById('optionsDropdown');
-        const responseDiv = document.getElementById('response');
-
-        submitBtn.addEventListener('click', () => {
-            errorMsg.textContent = '';
-            responseDiv.innerHTML = '';
-            dropdownContainer.style.display = 'none';
-            
-            let parsedJson;
-            try {
-                parsedJson = JSON.parse(jsonInput.value);
-                if (!parsedJson || !parsedJson.data) {
-                    throw new Error('Invalid JSON structure');
-                }
-            } catch (err) {
-                errorMsg.textContent = 'Invalid JSON format';
-                return;
-            }
-
-            dropdownContainer.style.display = 'block';
-
-            optionsDropdown.addEventListener('change', () => {
-                let selectedOptions = Array.from(optionsDropdown.selectedOptions, option => option.value);
-                let filteredData = parsedJson.data;
-
-                if (selectedOptions.includes('Alphabets')) {
-                    filteredData = filteredData.filter(item => /^[A-Za-z]+$/.test(item));
-                }
-                if (selectedOptions.includes('Numbers')) {
-                    filteredData = filteredData.filter(item => /^[0-9]+$/.test(item));
-                }
-                if (selectedOptions.includes('Highest alphabet')) {
-                    const highestAlphabet = filteredData.filter(item => /^[A-Za-z]+$/.test(item)).sort().reverse()[0];
-                    filteredData = [highestAlphabet];
-                }
-
-                responseDiv.innerHTML = `<h3>Response:</h3><p>${filteredData.join(', ')}</p>`;
-            });
-        });
-    </script>
-
+    
 </body>
 </html>
